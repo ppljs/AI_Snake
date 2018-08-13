@@ -1,5 +1,4 @@
 from kivy.app import App
-from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import Clock
@@ -12,6 +11,8 @@ from kivy.config import Config
 root = tkinter.Tk()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
+# screen_width = 500
+# screen_height = 500
 side_length = screen_height if screen_height < screen_width else screen_width
 Config.set('graphics', 'width', int(0.7*side_length))
 Config.set('graphics', 'height', int(0.7*side_length))

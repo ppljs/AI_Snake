@@ -10,7 +10,6 @@ from pynput.keyboard import Key, Listener
 BOARD_WIDTH = 15
 BOARD_HEIGHT = 15
 
-LEVEL = {1: 0.5, 2: 0.25, 3: 0.166, 4: 0.125, 5: 0.1}
 
 
 class Content(Enum):
@@ -18,6 +17,7 @@ class Content(Enum):
     wall = 1
     apple = 2
     snake = 3
+    snake_head = 4
 
 
 class Direction(Enum):
@@ -30,13 +30,22 @@ class Direction(Enum):
 class Game:
     def __init__(self):
         self.board = Board()
-        # self.printer = Printer(self.board.block_board)
+        self.printer = Printer(self.board.block_board)
         self.keyboard_handler = KeyboardHandler()
+        a = open('log.txt', 'w')
+        a.close()
 
     def run(self):
-        # self.printer.update_print()
-        return self.board.update(self.keyboard_handler.get_dir())
-        # self.printer.update_print()
+        log = open('log.txt', 'a+')
+        log.write(''.join(str(e) for e in self.board.get_flattenned_board()))
+
+        keyboard_direction = self.keyboard_handler.get_dir()
+        log.write(str(keyboard_direction.value) if keyboard_direction is not None else str(self.board.snake_head.direction.value))
+        log.write('\n')
+        log.close()
+        to_return = self.board.update(keyboard_direction)
+        self.printer.update_print()
+        return to_return
 
 class KeyboardHandler:
     def __init__(self):
@@ -71,14 +80,15 @@ class Printer:
         self.content_to_char = {Content.void: '-',
                                 Content.apple: '&',
                                 Content.snake: 'o',
+                                Content.snake_head: 'o',
                                 Content.wall: 'X'}
-        self.matrix_draw = np.zeros((BOARD_HEIGHT, BOARD_WIDTH), dtype=str)
+        self.matrix_draw = np.zeros((BOARD_HEIGHT, BOARD_WIDTH), dtype=int)
 
     def update_print(self):
         self.clear_screen()
         for i in range(BOARD_HEIGHT):
             for j in range(BOARD_WIDTH):
-                self.matrix_draw[i][j] = self.content_to_char[self.block_board[i][j].content]
+                self.matrix_draw[i][j] = self.block_board[i][j].content.value
 
         print(self.matrix_draw)
 
@@ -90,10 +100,15 @@ class Block:
     def __init__(self, content):
         self.content = content
         self.cycles_to_clear = 0
+        self.change = False
+
+    def __str__(self):
+        return str(self.content)
 
     def set_snake_head(self, snake_size):
-        self.content = Content.snake
+        self.content = Content.snake_head
         self.cycles_to_clear = snake_size
+        self.change = True
 
     def update(self):
         if self.cycles_to_clear > 0:
@@ -102,6 +117,10 @@ class Block:
                 self.content = Content.void
             else:
                 self.cycles_to_clear -= 1
+                if self.change:
+                    self.content = Content.snake
+                    self.change = False
+
 
 
 class Board:
@@ -140,9 +159,18 @@ class Board:
         temp_list = []
         for i in range(BOARD_HEIGHT):
             for j in range(BOARD_WIDTH):
-                if self.block_board[i][j].content == Content.snake:
+                if self.block_board[i][j].content == Content.snake or \
+                        self.block_board[i][j].content == Content.snake_head:
                     temp_list.append((j,i))
         return temp_list
+
+    def get_flattenned_board(self):
+        temp_flat = self.block_board.flatten()
+        int_flat = []
+        for i in range(BOARD_HEIGHT*BOARD_WIDTH):
+            int_flat.append(temp_flat[i].content.value)
+
+        return int_flat
 
     def update(self, snake_next_direction):
         for i in range(BOARD_HEIGHT):
@@ -161,7 +189,7 @@ class Board:
             self.place_apple()
         elif curr_snake_block.content == Content.wall:
             return False
-        elif curr_snake_block.content == Content.snake:
+        elif curr_snake_block.content == Content.snake or curr_snake_block.content == Content.snake_head:
             return False
         else:
             curr_snake_block.set_snake_head(self.snake_head.size)
