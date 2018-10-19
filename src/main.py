@@ -29,22 +29,13 @@ class Direction(Enum):
 class Game:
     def __init__(self):
         self.board = Board()
-        self.printer = Printer(self.board.block_board)
+        # self.printer = Printer(self.board.block_board)
         self.keyboard_handler = KeyboardHandler()
-        a = open('log.txt', 'w')
-        a.close()
 
     def run(self):
-        log = open('log.txt', 'a+')
-        log.write(''.join(str(e) for e in self.board.get_flattenned_board()))
-
         keyboard_direction = self.keyboard_handler.get_dir()
-        log.write(str(keyboard_direction.value) if keyboard_direction is not None else str(
-            self.board.snake_head.direction.value))
-        log.write('\n')
-        log.close()
         to_return = self.board.update(keyboard_direction)
-        self.printer.update_print()
+        # self.printer.update_print()
         return to_return
 
 

@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import Clock
-from src import main
+import main
 import tkinter
 
 
