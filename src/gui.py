@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import Clock
-import main
+import snake
 import tkinter
 
 
@@ -36,10 +36,10 @@ class SnakeGame(FloatLayout):
     def __init__(self, **kwargs):
         super(SnakeGame, self).__init__(**kwargs)
 
-        self.game = main.Game()
+        self.game = snake.Game()
 
-        self.row_number = main.BOARD_HEIGHT
-        self.column_number = main.BOARD_WIDTH
+        self.row_number = snake.BOARD_HEIGHT
+        self.column_number = snake.BOARD_WIDTH
 
         self.apple = Apple()
         self.snake_list = []
@@ -83,8 +83,8 @@ class SnakeGame(FloatLayout):
         self.apple.size = circle_diameter, circle_diameter
 
     def add_snake(self):
-        for snake in self.snake_list:
-            self.add_widget(snake)
+        for snake_piece in self.snake_list:
+            self.add_widget(snake_piece)
 
     def update_snake_pos(self, pos_list=None):
         snake_size = len(pos_list)
@@ -94,13 +94,13 @@ class SnakeGame(FloatLayout):
 
             self.snake_list.append(tmp_snake)
             self.add_widget(tmp_snake)
-        for pos, snake in zip(pos_list, self.snake_list):
-            snake.pos = self.unit_width * \
+        for pos, snake_piece in zip(pos_list, self.snake_list):
+            snake_piece.pos = self.unit_width * \
                 pos[0], self.unit_height * ((self.row_number - 1) - pos[1])
 
     def update_snake_size(self):
-        for snake in self.snake_list:
-            snake.size = self.unit_width, self.unit_height
+        for snake_piece in self.snake_list:
+            snake_piece.size = self.unit_width, self.unit_height
 
 
 class SnakeApp(App):
