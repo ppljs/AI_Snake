@@ -32,8 +32,11 @@ class Game:
         # self.printer = Printer(self.board.block_board)
         self.keyboard_handler = KeyboardHandler()
 
-    def run(self):
-        keyboard_direction = self.keyboard_handler.get_dir()
+    def run(self, automated_dir=None):
+        if automated_dir is None:
+            keyboard_direction = self.keyboard_handler.get_dir()
+        else:
+            keyboard_direction = self.board.snake_head.dir_to_snakeref(automated_dir)
         to_return = self.board.update(keyboard_direction)
         # self.printer.update_print()
         return to_return
@@ -202,6 +205,20 @@ class SnakeHead:
                                           Direction.right: Direction.left,
                                           Direction.up: Direction.down,
                                           Direction.down: Direction.up}
+        self._to_snakeref = {Direction.left: {Direction.left: Direction.down,
+                                              Direction.right: Direction.up},
+                             Direction.right: {Direction.left: Direction.up,
+                                               Direction.right: Direction.down},
+                             Direction.up: {Direction.left: Direction.left,
+                                            Direction.right: Direction.right},
+                             Direction.down: {Direction.left: Direction.right,
+                                              Direction.right: Direction.left}}
+
+    def dir_to_snakeref(self, dir):
+        if dir is None:
+            return None
+        else:
+            return self._to_snakeref[self.direction][dir]
 
     def update_direction(self, new_direction):
         if new_direction is not None and self._impossible_state_changes[self.direction] != new_direction:
