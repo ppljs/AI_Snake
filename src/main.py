@@ -11,7 +11,6 @@ BOARD_WIDTH = 15
 BOARD_HEIGHT = 15
 
 
-
 class Content(Enum):
     void = 0
     wall = 1
@@ -40,12 +39,14 @@ class Game:
         log.write(''.join(str(e) for e in self.board.get_flattenned_board()))
 
         keyboard_direction = self.keyboard_handler.get_dir()
-        log.write(str(keyboard_direction.value) if keyboard_direction is not None else str(self.board.snake_head.direction.value))
+        log.write(str(keyboard_direction.value) if keyboard_direction is not None else str(
+            self.board.snake_head.direction.value))
         log.write('\n')
         log.close()
         to_return = self.board.update(keyboard_direction)
         self.printer.update_print()
         return to_return
+
 
 class KeyboardHandler:
     def __init__(self):
@@ -69,7 +70,7 @@ class KeyboardHandler:
         with self.lock:
             try:
                 tmp_dir = self.dir_list.pop(0)
-            except:
+            except Exception as e:
                 tmp_dir = None
             return tmp_dir
 
@@ -93,7 +94,7 @@ class Printer:
         print(self.matrix_draw)
 
     def clear_screen(self):
-        call('clear' if os.name =='posix' else 'cls')
+        call('clear' if os.name == 'posix' else 'cls')
 
 
 class Block:
@@ -122,7 +123,6 @@ class Block:
                     self.change = False
 
 
-
 class Board:
     def __init__(self):
         self.block_board = None
@@ -132,14 +132,14 @@ class Board:
         snake_block = self.block_board[self.snake_head.i_pos][self.snake_head.j_pos]
         snake_block.set_snake_head(self.snake_head.size)
 
-        self.apple_pos = (-1,-1)
+        self.apple_pos = (-1, -1)
         self.place_apple()
 
     def _build_board(self):
         self.block_board = np.zeros((BOARD_HEIGHT, BOARD_WIDTH), dtype=Block)
         for i in range(BOARD_HEIGHT):
             for j in range(BOARD_WIDTH):
-                if i == 0 or i == BOARD_HEIGHT-1 or j == 0 or j == BOARD_WIDTH-1:
+                if i == 0 or i == BOARD_HEIGHT - 1 or j == 0 or j == BOARD_WIDTH - 1:
                     content = Content.wall
                 else:
                     content = Content.void
@@ -147,8 +147,8 @@ class Board:
 
     def place_apple(self):
         while True:
-            apple_j_pos = randint(1, BOARD_WIDTH-2)
-            apple_i_pos = randint(1, BOARD_HEIGHT-2)
+            apple_j_pos = randint(1, BOARD_WIDTH - 2)
+            apple_i_pos = randint(1, BOARD_HEIGHT - 2)
             curr_block = self.block_board[apple_i_pos][apple_j_pos]
             if curr_block.content == Content.void:
                 curr_block.content = Content.apple
@@ -161,13 +161,13 @@ class Board:
             for j in range(BOARD_WIDTH):
                 if self.block_board[i][j].content == Content.snake or \
                         self.block_board[i][j].content == Content.snake_head:
-                    temp_list.append((j,i))
+                    temp_list.append((j, i))
         return temp_list
 
     def get_flattenned_board(self):
         temp_flat = self.block_board.flatten()
         int_flat = []
-        for i in range(BOARD_HEIGHT*BOARD_WIDTH):
+        for i in range(BOARD_HEIGHT * BOARD_WIDTH):
             int_flat.append(temp_flat[i].content.value)
 
         return int_flat
@@ -204,9 +204,9 @@ class SnakeHead:
         self.direction = Direction.right
         self.size = 2
         self._move_actions = {Direction.left: self._move_left,
-                             Direction.right: self._move_right,
-                             Direction.up: self._move_up,
-                             Direction.down: self._move_down}
+                              Direction.right: self._move_right,
+                              Direction.up: self._move_up,
+                              Direction.down: self._move_down}
         self._impossible_state_changes = {Direction.left: Direction.right,
                                           Direction.right: Direction.left,
                                           Direction.up: Direction.down,

@@ -14,8 +14,8 @@ screen_height = root.winfo_screenheight()
 # screen_width = 500
 # screen_height = 500
 side_length = screen_height if screen_height < screen_width else screen_width
-Config.set('graphics', 'width', int(0.7*side_length))
-Config.set('graphics', 'height', int(0.7*side_length))
+Config.set('graphics', 'width', int(0.7 * side_length))
+Config.set('graphics', 'height', int(0.7 * side_length))
 Config.write()
 
 
@@ -47,7 +47,6 @@ class SnakeGame(FloatLayout):
         self.update_unit_measurements()
         self.bind(size=self.update_unit_measurements)
 
-
     def update_game(self, dt):
         snake_died = not self.game.run()
         if snake_died:
@@ -56,7 +55,6 @@ class SnakeGame(FloatLayout):
         snake_pos_list = self.game.board.get_snake_pos_ji_list()
         self.update_apple_pos(apple_pos[1], apple_pos[0])
         self.update_snake_pos(snake_pos_list)
-
 
     def update_unit_measurements(self, *args):
         self.unit_height = self.height / self.row_number
@@ -96,8 +94,9 @@ class SnakeGame(FloatLayout):
 
             self.snake_list.append(tmp_snake)
             self.add_widget(tmp_snake)
-        for pos,snake in zip(pos_list, self.snake_list):
-            snake.pos = self.unit_width * pos[0], self.unit_height * ((self.row_number - 1) - pos[1])
+        for pos, snake in zip(pos_list, self.snake_list):
+            snake.pos = self.unit_width * \
+                pos[0], self.unit_height * ((self.row_number - 1) - pos[1])
 
     def update_snake_size(self):
         for snake in self.snake_list:
