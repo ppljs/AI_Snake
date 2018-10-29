@@ -1,12 +1,9 @@
-from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-from kivy.clock import Clock
 import snake
 import tkinter
-
-
 from kivy.config import Config
+
 
 root = tkinter.Tk()
 screen_width = root.winfo_screenwidth()
@@ -31,10 +28,10 @@ class Snake(Image):
     pass
 
 
-class SnakeGame(FloatLayout):
+class SnakeGUI(FloatLayout):
 
     def __init__(self, **kwargs):
-        super(SnakeGame, self).__init__(**kwargs)
+        super(SnakeGUI, self).__init__(**kwargs)
 
         self.game = snake.Game()
 
@@ -101,15 +98,3 @@ class SnakeGame(FloatLayout):
     def update_snake_size(self):
         for snake_piece in self.snake_list:
             snake_piece.size = self.unit_width, self.unit_height
-
-
-class SnakeApp(App):
-    def build(self):
-        self.snake_game = SnakeGame()
-        Clock.schedule_interval(self.snake_game.update_game, 1.0 / 4.0)
-        return self.snake_game
-
-
-if __name__ == '__main__':
-    sa = SnakeApp()
-    sa.run()
