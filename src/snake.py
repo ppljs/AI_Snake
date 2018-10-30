@@ -140,7 +140,7 @@ class Board:
                     content = Content.void
                 self.block_board[i][j] = Block(content=content)
 
-    def get_features(self):
+    def get_features(self, normalize=True):
         s_i, s_j = self.snake_head.get_pos()
         block_dict = {Direction.up: self.block_board[s_i - 1][s_j],
                       Direction.right: self.block_board[s_i][s_j + 1],
@@ -151,13 +151,16 @@ class Board:
                         block_dict[self.snake_head.snakedir_to_worldref(Direction.right)]]
         l_f_r_obst = [1 if b.content != Content.void else 0 for b in l_f_r_blocks]
 
-
         alpha = utils.angle_between(np.subtract(self.apple_pos, (s_i, s_j)),
                                     self.snake_head.direction_vector[self.snake_head.direction])
 
-        l_f_r_obst.append(alpha)
+        if normalize:
+            factor = 360.0
+        else:
+            factor = 1
+
+        l_f_r_obst.append(alpha / factor)
         return l_f_r_obst
-    
 
     def place_apple(self):
         while True:
