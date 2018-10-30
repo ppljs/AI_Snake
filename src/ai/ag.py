@@ -1,6 +1,5 @@
 import numpy as np
 import heapq
-import time
 import snake
 
 
@@ -32,7 +31,7 @@ class Population:
             self.mutate(self.population[p].indv)
 
         for p in range(self.pop_size - 4, self.pop_size):
-            self.population[p] = Individual(self.pop_factory)
+            self.population[p] = Individual(self.pop_factory, self.pop_factory_args)
 
     def make_crossover(self, indv_a, indv_b, indv_c):
         for l in range(len(indv_a.layers)):
@@ -63,12 +62,6 @@ class Population:
             #     break
             self.adapt_population()
 
-        print('\n\n')
-        for x, y in zip(input_array, y_array):
-            result = self.population[0].indv.predict(x)
-            print("result = ", result)
-            print("y = ", y, '\n')
-
 
 class Individual:
     def __init__(self, factory):
@@ -77,12 +70,14 @@ class Individual:
         self.indv = factory.create()
 
     def get_mov(self, input_array):
-        y = np.argmax(self.indv.predict(input_array))
+        y = self.indv.predict(input_array)
+        print('Y =', y)
+        y = np.argmax(y)
         if y == 0:
             return None
         elif y == 1:
             return snake.Direction.right
-        else: 
+        else:
             return snake.Direction.left
 
     def clear_fit(self):

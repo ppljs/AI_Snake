@@ -89,9 +89,10 @@ class NeuralFactory:
         layers = np.zeros(num_layers, dtype=np.ndarray)
         layers[0] = NeuralLayer(self.layers_sizes[0], self.hidden_actv_fcn, self.input_size)
         for i in range(1, num_layers - 1):
-            layers[i] = NeuralLayer(self.layers_sizes[i], self.hidden_actv_fcn, self.layers_sizes[i - 1])
+            layers[i] = NeuralLayer(self.layers_sizes[i],
+                                    self.hidden_actv_fcn, self.layers_sizes[i - 1])
         layers[num_layers - 1] = NeuralLayer(self.layers_sizes[-1],
-                                            self.final_actv_fcn, self.layers_sizes[-2])
+                                             self.final_actv_fcn, self.layers_sizes[-2])
 
         return NeuralNet(layers)
 
