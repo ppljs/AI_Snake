@@ -24,7 +24,7 @@ class GameHandler:
 
     def train_snakes_step(self):
 
-        input_array = self.snake_game.board.get_features()
+        input_array = self.snake_game.board.get_features(normalize=False)
         print('Input array =', input_array)
         next_move = self.snake_pop.population[self.curr_indv].get_mov(input_array)
         print('Next move =', next_move, '\n\n')
