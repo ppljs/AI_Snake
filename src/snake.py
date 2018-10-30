@@ -5,6 +5,7 @@ import threading
 import os
 from subprocess import call
 from pynput.keyboard import Key, Listener
+import utils
 
 
 BOARD_WIDTH = 15
@@ -32,12 +33,12 @@ class Game:
         # self.printer = Printer(self.board.block_board)
         self.keyboard_handler = KeyboardHandler()
 
-    def run(self, automated_dir=None):
-        if automated_dir is None:
-            keyboard_direction = self.keyboard_handler.get_dir()
+    def run(self, automated_dir=None, use_keyboard=True):
+        if use_keyboard:
+            new_dir = self.keyboard_handler.get_dir()
         else:
-            keyboard_direction = self.board.snake_head.dir_to_snakeref(automated_dir)
-        to_return = self.board.update(keyboard_direction)
+            new_dir = self.board.snake_head.snakedir_to_worldref(automated_dir)
+        to_return = self.board.update(new_dir)
         # self.printer.update_print()
         return to_return
 
@@ -139,6 +140,25 @@ class Board:
                     content = Content.void
                 self.block_board[i][j] = Block(content=content)
 
+    def get_features(self):
+        s_i, s_j = self.snake_head.get_pos()
+        block_dict = {Direction.up: self.block_board[s_i - 1][s_j],
+                      Direction.right: self.block_board[s_i][s_j + 1],
+                      Direction.down: self.block_board[s_i + 1][s_j],
+                      Direction.left: self.block_board[s_i][s_j - 1]}
+        l_f_r_blocks = [block_dict[self.snake_head.snakedir_to_worldref(Direction.left)],
+                        block_dict[self.snake_head.direction],
+                        block_dict[self.snake_head.snakedir_to_worldref(Direction.right)]]
+        l_f_r_obst = [1 if b.content != Content.void else 0 for b in l_f_r_blocks]
+
+
+        alpha = utils.angle_between(np.subtract(self.apple_pos, (s_i, s_j)),
+                                    self.snake_head.direction_vector[self.snake_head.direction])
+
+        l_f_r_obst.append(alpha)
+        return l_f_r_obst
+    
+
     def place_apple(self):
         while True:
             apple_j_pos = randint(1, BOARD_WIDTH - 2)
@@ -213,8 +233,12 @@ class SnakeHead:
                                             Direction.right: Direction.right},
                              Direction.down: {Direction.left: Direction.right,
                                               Direction.right: Direction.left}}
+        self.direction_vector = {Direction.up: [-1, 0],
+                                 Direction.down: [1, 0],
+                                 Direction.left: [0, -1],
+                                 Direction.right: [0, 1]}
 
-    def dir_to_snakeref(self, dir):
+    def snakedir_to_worldref(self, dir):
         if dir is None:
             return None
         else:

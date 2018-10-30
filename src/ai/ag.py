@@ -1,17 +1,17 @@
 import numpy as np
 import heapq
 import time
+import snake
 
 
 class Population:
-    def __init__(self, factory, factory_args, pop_size, individuals=None):
+    def __init__(self, factory, pop_size, individuals=None):
         self.pop_size = pop_size
         self.pop_factory = factory
-        self.pop_factory_args = factory_args
 
         if individuals is None:
             self.population = np.empty(pop_size, dtype=object)
-            self.create_population(factory, factory_args)
+            self.create_population(factory)
         else:
             self.population = np.array(individuals, ndarray=object)
 
@@ -20,9 +20,9 @@ class Population:
         fit_a = heapq.nlargest(self.pop_size, range(self.pop_size), fit_a.take)
         self.population = np.array([self.population[fit_a[i]] for i in range(len(fit_a))])
 
-    def create_population(self, factory, factory_args):
+    def create_population(self, factory):
         for i in range(self.pop_size):
-            self.population[i] = Individual(factory, factory_args)
+            self.population[i] = Individual(factory)
 
     def adapt_population(self):
         for p in range(1, self.pop_size - 4):
@@ -32,7 +32,7 @@ class Population:
             self.mutate(self.population[p].indv)
 
         for p in range(self.pop_size - 4, self.pop_size):
-            self.population[p] = Individual(self.pop_factory, self.pop_factory_args)
+            self.population[p] = Individual(self.pop_factory)
 
     def make_crossover(self, indv_a, indv_b, indv_c):
         for l in range(len(indv_a.layers)):
@@ -71,14 +71,19 @@ class Population:
 
 
 class Individual:
-    def __init__(self, factory, factory_args):
+    def __init__(self, factory):
         self.fit = 0
         self.rank = 0
-        self.indv = factory.create(*factory_args)
+        self.indv = factory.create()
 
-    def evaluate(self, input_array, y_array):
-        # self.fit = (self.fit + self.indv.evaluate(input_array, y_array)) / 2
-        self.fit += self.indv.evaluate(input_array, y_array)
+    def get_mov(self, input_array):
+        y = np.argmax(self.indv.predict(input_array))
+        if y == 0:
+            return None
+        elif y == 1:
+            return snake.Direction.right
+        else: 
+            return snake.Direction.left
 
     def clear_fit(self):
         self.fit = 0

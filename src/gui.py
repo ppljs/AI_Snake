@@ -1,19 +1,18 @@
+import tkinter
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-import snake
-import tkinter
 from kivy.config import Config
+import snake
 
 
-root = tkinter.Tk()
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
-# screen_width = 500
-# screen_height = 500
-side_length = screen_height if screen_height < screen_width else screen_width
-Config.set('graphics', 'width', int(0.7 * side_length))
-Config.set('graphics', 'height', int(0.7 * side_length))
-Config.write()
+def config_gui():
+    root = tkinter.Tk()
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    side_length = screen_height if screen_height < screen_width else screen_width
+    Config.set('graphics', 'width', int(0.7 * side_length))
+    Config.set('graphics', 'height', int(0.7 * side_length))
+    Config.write()
 
 
 class Wall(Image):
@@ -33,8 +32,6 @@ class SnakeGUI(FloatLayout):
     def __init__(self, **kwargs):
         super(SnakeGUI, self).__init__(**kwargs)
 
-        self.game = snake.Game()
-
         self.row_number = snake.BOARD_HEIGHT
         self.column_number = snake.BOARD_WIDTH
 
@@ -43,13 +40,10 @@ class SnakeGUI(FloatLayout):
 
         self.update_unit_measurements()
         self.bind(size=self.update_unit_measurements)
-
-    def update_game(self, dt):
-        snake_died = not self.game.run()
-        if snake_died:
-            quit()
-        apple_pos = self.game.board.apple_pos
-        snake_pos_list = self.game.board.get_snake_pos_ji_list()
+    
+    def update_gui(self, board):
+        apple_pos = board.apple_pos
+        snake_pos_list = board.get_snake_pos_ji_list()
         self.update_apple_pos(apple_pos[1], apple_pos[0])
         self.update_snake_pos(snake_pos_list)
 

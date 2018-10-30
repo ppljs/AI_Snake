@@ -78,17 +78,20 @@ class NeuralLayer:
 
 
 class NeuralFactory:
-    def __init__(self):
-        pass
+    def __init__(self, hidden_actv_fcn, final_actv_fcn, layers_sizes, input_size):
+        self.hidden_actv_fcn = hidden_actv_fcn
+        self.final_actv_fcn = final_actv_fcn
+        self.layers_sizes = layers_sizes
+        self.input_size = input_size
 
-    def create(self, hidden_actv_fcn, final_actv_fcn, layers_sizes, input_size):
-        num_layers = len(layers_sizes)
+    def create(self):
+        num_layers = len(self.layers_sizes)
         layers = np.zeros(num_layers, dtype=np.ndarray)
-        layers[0] = NeuralLayer(layers_sizes[0], hidden_actv_fcn, input_size)
+        layers[0] = NeuralLayer(self.layers_sizes[0], self.hidden_actv_fcn, self.input_size)
         for i in range(1, num_layers - 1):
-            layers[i] = NeuralLayer(layers_sizes[i], hidden_actv_fcn, layers_sizes[i - 1])
-        layers[num_layers - 1] = NeuralLayer(layers_sizes[-1],
-                                             final_actv_fcn, layers_sizes[-2])
+            layers[i] = NeuralLayer(self.layers_sizes[i], self.hidden_actv_fcn, self.layers_sizes[i - 1])
+        layers[num_layers - 1] = NeuralLayer(self.layers_sizes[-1],
+                                            self.final_actv_fcn, self.layers_sizes[-2])
 
         return NeuralNet(layers)
 
