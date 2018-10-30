@@ -27,18 +27,49 @@ class Direction(Enum):
     right = 3
 
 
+class Scores(Enum):
+    MOV_CLOSER = 0.1
+    MOV_FARTHER = -0.2
+    ATE_APPLE = 0.7
+
+
 class Game:
-    def __init__(self):
+    def __init__(self, max_moves=None):
         self.board = Board()
         # self.printer = Printer(self.board.block_board)
         self.keyboard_handler = KeyboardHandler()
+        self.score = 0
+        self.max_moves = max_moves
+
+    def calc_score(self, snake_pos_before, snake_size_before):
+        if self.board.snake_head.size > snake_size_before:
+            self.score += Scores.ATE_APPLE.value
+            self.score += Scores.MOV_CLOSER.value
+        elif utils.distance(self.board.apple_pos, snake_pos_before) > \
+                utils.distance(self.board.apple_pos, self.board.snake_head.get_pos()):
+            self.score += Scores.MOV_CLOSER.value
+        else:
+            self.score += Scores.MOV_FARTHER.value
 
     def run(self, automated_dir=None, use_keyboard=True):
+        if self.max_moves is not None:
+            if self.max_moves > 0:
+                self.max_moves -= 1
+            else:
+                return False
+
         if use_keyboard:
             new_dir = self.keyboard_handler.get_dir()
         else:
             new_dir = self.board.snake_head.snakedir_to_worldref(automated_dir)
+
+        snake_pos_before = self.board.snake_head.get_pos()
+        snake_size_before = self.board.snake_head.size
+
         to_return = self.board.update(new_dir)
+
+        self.calc_score(snake_pos_before, snake_size_before)
+
         # self.printer.update_print()
         return to_return
 

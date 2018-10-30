@@ -9,7 +9,7 @@ from ai import neuralnet as nn
 
 class GameHandler:
     def __init__(self):
-        self.snake_game = snake.Game()
+        self.snake_game = snake.Game(max_moves=20)
         self.snake_pop = None
         self._configure_pop()
 
@@ -23,21 +23,22 @@ class GameHandler:
         self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 15)
 
     def train_snakes_step(self):
-
         input_array = self.snake_game.board.get_features(normalize=False)
         print('Input array =', input_array)
         next_move = self.snake_pop.population[self.curr_indv].get_mov(input_array)
+        print('Score =', self.snake_game.score)
         print('Next move =', next_move, '\n\n')
-        # have to calculate the fitness of the predicted mov here
+
         is_alive = self.snake_game.run(next_move, False)
 
         if not is_alive:
+            self.snake_pop.population[self.curr_indv].fit = self.snake_game.score
             self.curr_indv += 1
             if self.curr_indv == self.snake_pop.pop_size:
                 self.curr_indv = 0
                 self.generation += 1
                 # Probably some other actions need to go here
-            self.snake_game = snake.Game()
+            self.snake_game = snake.Game(max_moves=20)
             return False
 
         return True
