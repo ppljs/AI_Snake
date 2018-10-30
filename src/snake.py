@@ -153,6 +153,10 @@ class Board:
 
         alpha = utils.angle_between(np.subtract(self.apple_pos, (s_i, s_j)),
                                     self.snake_head.direction_vector[self.snake_head.direction])
+        print('s_i, s_j =', s_i, s_j)
+        print('apple pos =', self.apple_pos)
+        print('translation =', np.subtract(self.apple_pos, (s_i, s_j)))
+        print('snake_dir =', self.snake_head.direction_vector[self.snake_head.direction])
 
         if normalize:
             factor = 360.0

@@ -38,6 +38,9 @@ class GameHandler:
                 self.generation += 1
                 # Probably some other actions need to go here
             self.snake_game = snake.Game()
+            return False
+
+        return True
 
 
 class SnakeApp(App):
@@ -48,14 +51,16 @@ class SnakeApp(App):
 
         self.gui.update_gui(self.game_handler.snake_game.board)
 
-        update_freq_hz = 2.0
+        update_freq_hz = 4.0
         Clock.schedule_interval(self.update_game, 1 / update_freq_hz)
 
         return self.gui
 
     def update_game(self, dt):
         self.gui.update_gui(self.game_handler.snake_game.board)
-        self.game_handler.train_snakes_step()
+        lived = self.game_handler.train_snakes_step()
+        if not lived:
+            self.gui.update_unit_measurements()
         self.gui.update_gui(self.game_handler.snake_game.board)
 
 

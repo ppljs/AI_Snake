@@ -40,7 +40,7 @@ class SnakeGUI(FloatLayout):
 
         self.update_unit_measurements()
         self.bind(size=self.update_unit_measurements)
-    
+
     def update_gui(self, board):
         apple_pos = board.apple_pos
         snake_pos_list = board.get_snake_pos_ji_list()
@@ -51,6 +51,7 @@ class SnakeGUI(FloatLayout):
         self.unit_height = self.height / self.row_number
         self.unit_width = self.width / self.column_number
         self.clear_widgets()
+        self.snake_list.clear()
         self.add_walls()
         self.update_apple_size()
         self.add_widget(self.apple)
@@ -82,9 +83,9 @@ class SnakeGUI(FloatLayout):
         while snake_size > len(self.snake_list):
             tmp_snake = Snake()
             tmp_snake.size = self.unit_width, self.unit_height
-
             self.snake_list.append(tmp_snake)
             self.add_widget(tmp_snake)
+
         for pos, snake_piece in zip(pos_list, self.snake_list):
             snake_piece.pos = self.unit_width * \
                 pos[0], self.unit_height * ((self.row_number - 1) - pos[1])
