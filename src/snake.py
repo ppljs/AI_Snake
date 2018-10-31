@@ -38,10 +38,11 @@ class Scores(Enum):
 
 
 class Game:
-    def __init__(self, max_moves=None, print=False):
+    def __init__(self, max_moves=None, print=False, use_keyboard=False):
+        self.use_keyboard = use_keyboard
         self.board = Board()
         self.printer = Printer(self.board.block_board)
-        # self.keyboard_handler = KeyboardHandler()
+        self.keyboard_handler = KeyboardHandler() if use_keyboard else None
         self.score = 0
         self.max_moves = max_moves
         self.print = print
@@ -57,16 +58,15 @@ class Game:
         else:
             self.score += Scores.MOV_FARTHER.value
 
-    def run(self, automated_dir=None, use_keyboard=True):
+    def run(self, automated_dir=None):
         if self.max_moves is not None:
             if self.max_moves > 0:
                 self.max_moves -= 1
             else:
                 return False
 
-        if use_keyboard:
-            pass
-            # new_dir = self.keyboard_handler.get_dir()
+        if self.use_keyboard:
+            new_dir = self.keyboard_handler.get_dir()
         else:
             new_dir = self.board.snake_head.snakedir_to_worldref(automated_dir)
 
@@ -77,7 +77,8 @@ class Game:
 
         self.calc_score(snake_pos_before, snake_size_before)
         if self.print:
-            self.printer.update_print()
+            # self.printer.update_print()
+            pass
         return to_return
 
 
@@ -116,7 +117,7 @@ class Printer:
                                 Content.snake: 'o',
                                 Content.snake_head: 'o',
                                 Content.wall: 'X'}
-        self.matrix_draw = np.zeros((BOARD_HEIGHT, BOARD_WIDTH), dtype=int)
+        self.matrix_draw = np.zeros((BOARD_HEIGHT, BOARD_WIDTH), dtype=str)
 
     def update_print(self):
         self.clear_screen()
@@ -192,10 +193,8 @@ class Board:
 
         alpha = utils.angle_between(np.subtract(self.apple_pos, (s_i, s_j)),
                                     self.snake_head.direction_vector[self.snake_head.direction])
-        print('s_i, s_j =', s_i, s_j)
-        print('apple pos =', self.apple_pos)
-        print('translation =', np.subtract(self.apple_pos, (s_i, s_j)))
-        print('snake_dir =', self.snake_head.direction_vector[self.snake_head.direction])
+
+        print(l_f_r_obst)
 
         if normalize:
             factor = 360.0
@@ -214,9 +213,10 @@ class Board:
                 self.apple_pos = (apple_i_pos, apple_j_pos)
                 break
         # counter = 0
+        # pos_len = len(apple_train_pos)
         # while True:
-        #     apple_i_pos = apple_train_pos[self.apple_pos_ind][counter][0]
-        #     apple_j_pos = apple_train_pos[self.apple_pos_ind][counter][1]
+        #     apple_i_pos = apple_train_pos[self.apple_pos_ind % 6][counter][0]
+        #     apple_j_pos = apple_train_pos[self.apple_pos_ind % 6][counter][1]
         #     curr_block = self.block_board[apple_i_pos][apple_j_pos]
         #     if curr_block.content == Content.void:
         #         curr_block.content = Content.apple
