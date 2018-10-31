@@ -108,6 +108,17 @@ class ActivationFcn:
         return np.multiply(val_array, np.subtract(1, val_array))
 
 
+class ActivationFcn2:
+    def __init__(self):
+        pass
+
+    def actv(self, val_array):
+        return np.maximum(0, val_array)
+
+    def grad(self, val_array):
+        return np.multiply(val_array, np.subtract(1, val_array))
+
+
 def load_neural_net(where):
     with open(where, 'rb') as in_file:
         return pickle.load(in_file)

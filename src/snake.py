@@ -12,6 +12,10 @@ BOARD_WIDTH = 15
 BOARD_HEIGHT = 15
 
 
+apple_train_pos = [[(13, 13), (3, 3)], [(1, 1), (11, 11)], [(13, 3), (3, 13)],
+                   [(1, 11), (11, 1)], [(5, 5), (9, 9)], [(7, 2), (12, 7)]]
+
+
 class Content(Enum):
     void = 0
     wall = 1
@@ -34,12 +38,13 @@ class Scores(Enum):
 
 
 class Game:
-    def __init__(self, max_moves=None):
+    def __init__(self, max_moves=None, print=False):
         self.board = Board()
-        # self.printer = Printer(self.board.block_board)
-        self.keyboard_handler = KeyboardHandler()
+        self.printer = Printer(self.board.block_board)
+        # self.keyboard_handler = KeyboardHandler()
         self.score = 0
         self.max_moves = max_moves
+        self.print = print
 
     def calc_score(self, snake_pos_before, snake_size_before):
         if self.board.snake_head.size > snake_size_before:
@@ -60,7 +65,8 @@ class Game:
                 return False
 
         if use_keyboard:
-            new_dir = self.keyboard_handler.get_dir()
+            pass
+            # new_dir = self.keyboard_handler.get_dir()
         else:
             new_dir = self.board.snake_head.snakedir_to_worldref(automated_dir)
 
@@ -70,8 +76,8 @@ class Game:
         to_return = self.board.update(new_dir)
 
         self.calc_score(snake_pos_before, snake_size_before)
-
-        # self.printer.update_print()
+        if self.print:
+            self.printer.update_print()
         return to_return
 
 
@@ -118,7 +124,7 @@ class Printer:
             for j in range(BOARD_WIDTH):
                 self.matrix_draw[i][j] = self.block_board[i][j].content.value
 
-        #print(self.matrix_draw)
+        print(self.matrix_draw)
 
     def clear_screen(self):
         call('clear' if os.name == 'posix' else 'cls')
@@ -160,6 +166,7 @@ class Board:
         snake_block.set_snake_head(self.snake_head.size)
 
         self.apple_pos = (-1, -1)
+        self.apple_pos_ind = 0
         self.place_apple()
 
     def _build_board(self):
@@ -206,6 +213,17 @@ class Board:
                 curr_block.content = Content.apple
                 self.apple_pos = (apple_i_pos, apple_j_pos)
                 break
+        # counter = 0
+        # while True:
+        #     apple_i_pos = apple_train_pos[self.apple_pos_ind][counter][0]
+        #     apple_j_pos = apple_train_pos[self.apple_pos_ind][counter][1]
+        #     curr_block = self.block_board[apple_i_pos][apple_j_pos]
+        #     if curr_block.content == Content.void:
+        #         curr_block.content = Content.apple
+        #         self.apple_pos = (apple_i_pos, apple_j_pos)
+        #         break
+        #     counter += 1
+        # self.apple_pos_ind += 1
 
     def get_snake_pos_ji_list(self):
         temp_list = []
