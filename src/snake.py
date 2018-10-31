@@ -189,12 +189,11 @@ class Board:
         l_f_r_blocks = [block_dict[self.snake_head.snakedir_to_worldref(Direction.left)],
                         block_dict[self.snake_head.direction],
                         block_dict[self.snake_head.snakedir_to_worldref(Direction.right)]]
-        l_f_r_obst = [1 if b.content != Content.void else 0 for b in l_f_r_blocks]
+        l_f_r_obst = [1 if b.content != Content.void and b.content != Content.apple
+                      else 0 for b in l_f_r_blocks]
 
         alpha = utils.angle_between(np.subtract(self.apple_pos, (s_i, s_j)),
                                     self.snake_head.direction_vector[self.snake_head.direction])
-
-        print(l_f_r_obst)
 
         if normalize:
             factor = 360.0

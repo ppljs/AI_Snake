@@ -92,7 +92,7 @@ class SnakeApp(App):
     def build(self):
         self.gui = gui.SnakeGUI()
 
-        update_freq_hz = 3
+        update_freq_hz = 10
         Clock.schedule_interval(self.update_game, 1 / update_freq_hz)
         return self.gui
 
@@ -113,7 +113,7 @@ def no_gui_game():
 if __name__ == '__main__':
     USE_GUI = True
     USE_SAVE = True
-    MANUAL = True
+    MANUAL = False
 
     if MANUAL:
         sa = SnakeApp()
