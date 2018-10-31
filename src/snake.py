@@ -28,9 +28,9 @@ class Direction(Enum):
 
 
 class Scores(Enum):
-    MOV_CLOSER = 0.1
-    MOV_FARTHER = -0.2
-    ATE_APPLE = 0.7
+    MOV_CLOSER = 1
+    MOV_FARTHER = -2
+    ATE_APPLE = 10
 
 
 class Game:
@@ -45,6 +45,7 @@ class Game:
         if self.board.snake_head.size > snake_size_before:
             self.score += Scores.ATE_APPLE.value
             self.score += Scores.MOV_CLOSER.value
+            self.max_moves += 20
         elif utils.distance(self.board.apple_pos, snake_pos_before) > \
                 utils.distance(self.board.apple_pos, self.board.snake_head.get_pos()):
             self.score += Scores.MOV_CLOSER.value
@@ -117,7 +118,7 @@ class Printer:
             for j in range(BOARD_WIDTH):
                 self.matrix_draw[i][j] = self.block_board[i][j].content.value
 
-        print(self.matrix_draw)
+        #print(self.matrix_draw)
 
     def clear_screen(self):
         call('clear' if os.name == 'posix' else 'cls')
@@ -193,7 +194,6 @@ class Board:
             factor = 360.0
         else:
             factor = 1
-
         l_f_r_obst.append(alpha / factor)
         return l_f_r_obst
 
