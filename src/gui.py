@@ -14,16 +14,19 @@ def config_gui():
     Config.set('graphics', 'height', int(0.7 * side_length))
     Config.write()
 
+class Snake_Head(Image):
+    pass
 
 class Wall(Image):
     pass
 
-
 class Apple(Image):
     pass
 
-
 class Snake(Image):
+    pass
+
+class Floor(Image):
     pass
 
 
@@ -66,6 +69,11 @@ class SnakeGUI(FloatLayout):
                     temp_wall.pos = j * self.unit_width, i * self.unit_height
                     temp_wall.size = self.unit_width, self.unit_height
                     self.add_widget(temp_wall)
+                else:
+                    temp_wall = Floor()
+                    temp_wall.pos = j * self.unit_width, i * self.unit_height
+                    temp_wall.size = self.unit_width, self.unit_height
+                    self.add_widget(temp_wall)
 
     def update_apple_pos(self, pos_j, pos_i):
         self.apple.pos = self.unit_width * pos_j, self.unit_height * ((self.row_number - 1) - pos_i)
@@ -81,7 +89,7 @@ class SnakeGUI(FloatLayout):
     def update_snake_pos(self, pos_list=None):
         snake_size = len(pos_list)
         while snake_size > len(self.snake_list):
-            tmp_snake = Snake()
+            tmp_snake = Snake()         
             tmp_snake.size = self.unit_width, self.unit_height
             self.snake_list.append(tmp_snake)
             self.add_widget(tmp_snake)
