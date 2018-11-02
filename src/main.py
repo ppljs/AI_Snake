@@ -1,3 +1,4 @@
+import copy
 from kivy.app import App
 from kivy.clock import Clock
 
@@ -12,19 +13,22 @@ class GameHandler:
         self.manual = manual
         self.indv = indv
         self.print_board = print_board
-        self.snake_game = snake.Game(max_moves=40, print=print_board, use_keyboard=manual)
+
+        self.snake_game = snake.Game(max_moves=55, print=print_board, use_keyboard=manual)
+
         self.snake_pop = None
         self._configure_pop()
-        self.generation = 0
+
         self.curr_indv = 0
         self.max_fit = 0
+        self.max_apples = 0
 
     def _configure_pop(self):
         if self.indv is None:
             LAYERS_SIZE = [16, 8, 3]
             INPUT_SIZE = 4
             neural_net_configs = [nn.ActivationFcn2(), nn.ActivationFcn(), LAYERS_SIZE, INPUT_SIZE]
-            self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 150)
+            self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 75)
         else:
             self.snake_pop = ag.Population(factory=None, pop_size=1,
                                            individuals=[self.indv])
@@ -55,21 +59,24 @@ class GameHandler:
         is_alive = self.snake_game.run(next_move)
 
         if not is_alive:
+            if self.max_apples < self.snake_game.eaten_apples:
+                self.max_apples = self.snake_game.eaten_apples
             self.snake_pop.population[self.curr_indv].add_fit(self.snake_game.score)
             self.curr_indv += 1
             if self.curr_indv == self.snake_pop.pop_size:
                 self.curr_indv = 0
-                if self.generation == 500:
+                if self.snake_pop.generation == 500000:
                     quit()
-                self.generation += 1
                 self.snake_pop.improve_pop()
-                print('G =', self.generation)
+                print('G =', self.snake_pop.generation)
                 print('best fit =', self.snake_pop.population[0].get_fit())
+                print('max_apples =', self.max_apples)
+                self.max_apples = 0
                 if self.snake_pop.population[0].get_fit() > self.max_fit:
                     self.max_fit = self.snake_pop.population[0].get_fit()
                     self.snake_pop.population[0].indv.save_neural_net('save.pkl')
                 print('max fit =', self.max_fit, '\n')
-            self.snake_game = snake.Game(max_moves=40, print=self.print_board)
+            self.snake_game = snake.Game(max_moves=55, print=self.print_board)
             return False
         return True
 
@@ -92,7 +99,7 @@ class SnakeApp(App):
     def build(self):
         self.gui = gui.SnakeGUI()
 
-        update_freq_hz = 10
+        update_freq_hz = 20
         Clock.schedule_interval(self.update_game, 1 / update_freq_hz)
         return self.gui
 

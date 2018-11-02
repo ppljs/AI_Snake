@@ -33,8 +33,8 @@ class Direction(Enum):
 
 class Scores(Enum):
     MOV_CLOSER = 1
-    MOV_FARTHER = -2
-    ATE_APPLE = 10
+    MOV_FARTHER = -3
+    ATE_APPLE = 14
 
 
 class Game:
@@ -46,12 +46,14 @@ class Game:
         self.score = 0
         self.max_moves = max_moves
         self.print = print
+        self.eaten_apples = 0
 
     def calc_score(self, snake_pos_before, snake_size_before):
         if self.board.snake_head.size > snake_size_before:
             self.score += Scores.ATE_APPLE.value
             self.score += Scores.MOV_CLOSER.value
-            self.max_moves += 20
+            self.eaten_apples += 1
+            self.max_moves += 55
         elif utils.distance(self.board.apple_pos, snake_pos_before) > \
                 utils.distance(self.board.apple_pos, self.board.snake_head.get_pos()):
             self.score += Scores.MOV_CLOSER.value
