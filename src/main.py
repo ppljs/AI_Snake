@@ -9,12 +9,14 @@ from ai import neuralnet as nn
 
 
 class GameHandler:
-    def __init__(self, print_board=False, indv=None, manual=False):
+    def __init__(self, print_board=False, indv=None, manual=False, max_moves=100):
         self.manual = manual
         self.indv = indv
         self.print_board = print_board
+        self.max_moves = max_moves
 
-        self.snake_game = snake.Game(max_moves=55, print=print_board, use_keyboard=manual)
+        self.snake_game = snake.Game(max_moves=self.max_moves, print=print_board,
+                                     use_keyboard=manual)
 
         self.snake_pop = None
         self._configure_pop()
@@ -25,10 +27,10 @@ class GameHandler:
 
     def _configure_pop(self):
         if self.indv is None:
-            LAYERS_SIZE = [16, 8, 3]
+            LAYERS_SIZE = [8, 3]
             INPUT_SIZE = 4
             neural_net_configs = [nn.ActivationFcn2(), nn.ActivationFcn(), LAYERS_SIZE, INPUT_SIZE]
-            self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 75)
+            self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 100)
         else:
             self.snake_pop = ag.Population(factory=None, pop_size=1,
                                            individuals=[self.indv])
@@ -48,7 +50,7 @@ class GameHandler:
         next_move = self.snake_pop.population[0].get_mov(input_array)
         is_alive = self.snake_game.run(next_move)
         if not is_alive:
-            self.snake_game = snake.Game(max_moves=40, print=self.print_board)
+            self.snake_game = snake.Game(max_moves=self.max_moves, print=self.print_board)
             return False
         return True
 
@@ -72,11 +74,12 @@ class GameHandler:
                 print('best fit =', self.snake_pop.population[0].get_fit())
                 print('max_apples =', self.max_apples)
                 self.max_apples = 0
+                self.snake_pop.population[0].indv.save_neural_net('save.pkl')
+                print('safe to ctrl_c')
                 if self.snake_pop.population[0].get_fit() > self.max_fit:
                     self.max_fit = self.snake_pop.population[0].get_fit()
-                    self.snake_pop.population[0].indv.save_neural_net('save.pkl')
                 print('max fit =', self.max_fit, '\n')
-            self.snake_game = snake.Game(max_moves=55, print=self.print_board)
+            self.snake_game = snake.Game(max_moves=self.max_moves, print=self.print_board)
             return False
         return True
 
@@ -99,7 +102,7 @@ class SnakeApp(App):
     def build(self):
         self.gui = gui.SnakeGUI()
 
-        update_freq_hz = 20
+        update_freq_hz = 25
         Clock.schedule_interval(self.update_game, 1 / update_freq_hz)
         return self.gui
 

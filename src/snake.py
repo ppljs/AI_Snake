@@ -33,8 +33,8 @@ class Direction(Enum):
 
 class Scores(Enum):
     MOV_CLOSER = 1
-    MOV_FARTHER = -3
-    ATE_APPLE = 14
+    MOV_FARTHER = -2
+    ATE_APPLE = 18
 
 
 class Game:
@@ -45,6 +45,7 @@ class Game:
         self.keyboard_handler = KeyboardHandler() if use_keyboard else None
         self.score = 0
         self.max_moves = max_moves
+        self.moves_left = self.max_moves
         self.print = print
         self.eaten_apples = 0
 
@@ -53,7 +54,7 @@ class Game:
             self.score += Scores.ATE_APPLE.value
             self.score += Scores.MOV_CLOSER.value
             self.eaten_apples += 1
-            self.max_moves += 55
+            self.moves_left += self.max_moves
         elif utils.distance(self.board.apple_pos, snake_pos_before) > \
                 utils.distance(self.board.apple_pos, self.board.snake_head.get_pos()):
             self.score += Scores.MOV_CLOSER.value
@@ -62,8 +63,8 @@ class Game:
 
     def run(self, automated_dir=None):
         if self.max_moves is not None:
-            if self.max_moves > 0:
-                self.max_moves -= 1
+            if self.moves_left > 0:
+                self.moves_left -= 1
             else:
                 return False
 

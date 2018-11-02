@@ -21,6 +21,7 @@ class Population:
 
         self.best_indv_alltime = copy.deepcopy(self.population[0])
         self.previous_best = self.population[0]
+        self.test = self.best_indv_alltime
 
     def sort_population(self):
         fit_a = np.array([indv.get_fit() for indv in self.population])
@@ -46,8 +47,8 @@ class Population:
         for i in range(1, self.pop_size):
             for j in range(len(self.population[0].indv.layers)):
                 self.population[i].indv.layers[j].weight_mtr = np.add(
-                    np.multiply(self.population[0].indv.layers[j].weight_mtr, 0.25),
-                    np.multiply(self.population[i].indv.layers[j].weight_mtr, 0.75))
+                    np.multiply(self.population[0].indv.layers[j].weight_mtr, 0.4),
+                    np.multiply(self.population[i].indv.layers[j].weight_mtr, 0.6))
 
     def make_crossover(self):
         for i in range(1, self.pop_size):
@@ -85,7 +86,7 @@ class Population:
                 mtr = l.weight_mtr
                 for i in range(mtr.shape[0]):
                     for j in range(mtr.shape[1]):
-                        if np.random.uniform(0, 1) < 0.01:
+                        if np.random.uniform(0, 1) < 0.0075:
                             mtr[i][j] = np.random.uniform(-1, 1)
         # for i in range(self.mutation_frequency):
         #     mutant_ind = np.random.randint(1, self.pop_size - 1)
@@ -99,10 +100,11 @@ class Population:
         self.sort_population()
         if self.best_indv_alltime.get_fit() < self.population[0].get_fit():
             self.best_indv_alltime = copy.deepcopy(self.population[0])
-        if self.previous_best is not self.population[0]:
-            print('CHANGED')
-        else:
-            print('SAME')
+
+        # if self.previous_best is not self.population[0]:
+        #     print('CHANGED')
+        # else:
+        #     print('SAME')
         self.remove_worst()
         self.make_crossover_simoes()
 
@@ -124,6 +126,13 @@ class Population:
         if self.generation % 30 == 0:
             self.test = copy.deepcopy(self.best_indv_alltime)
             self.population[-1] = self.test
+
+        i = 0
+        for indv in self.population:
+            if indv is self.test:
+                print('i =', i)
+                break
+            i += 1
 
         self.mutate()
         self.generation += 1
