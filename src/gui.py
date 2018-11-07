@@ -15,6 +15,10 @@ def config_gui():
     Config.write()
 
 
+class Snake_Head(Image):
+    pass
+
+
 class Wall(Image):
     pass
 
@@ -24,6 +28,10 @@ class Apple(Image):
 
 
 class Snake(Image):
+    pass
+
+
+class Floor(Image):
     pass
 
 
@@ -63,6 +71,11 @@ class SnakeGUI(FloatLayout):
             for j in range(self.column_number):
                 if i == 0 or i == self.row_number - 1 or j == 0 or j == self.column_number - 1:
                     temp_wall = Wall()
+                    temp_wall.pos = j * self.unit_width, i * self.unit_height
+                    temp_wall.size = self.unit_width, self.unit_height
+                    self.add_widget(temp_wall)
+                else:
+                    temp_wall = Floor()
                     temp_wall.pos = j * self.unit_width, i * self.unit_height
                     temp_wall.size = self.unit_width, self.unit_height
                     self.add_widget(temp_wall)
