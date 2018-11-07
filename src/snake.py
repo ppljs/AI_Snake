@@ -33,8 +33,8 @@ class Direction(Enum):
 
 class Scores(Enum):
     MOV_CLOSER = 1
-    MOV_FARTHER = -2
-    ATE_APPLE = 18
+    MOV_FARTHER = -3
+    ATE_APPLE = 40
 
 
 class Game:

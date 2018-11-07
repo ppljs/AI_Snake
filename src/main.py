@@ -30,7 +30,7 @@ class GameHandler:
             LAYERS_SIZE = [8, 3]
             INPUT_SIZE = 4
             neural_net_configs = [nn.ActivationFcn2(), nn.ActivationFcn(), LAYERS_SIZE, INPUT_SIZE]
-            self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 100)
+            self.snake_pop = ag.Population(nn.NeuralFactory(*neural_net_configs), 75)
         else:
             self.snake_pop = ag.Population(factory=None, pop_size=1,
                                            individuals=[self.indv])

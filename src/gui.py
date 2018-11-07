@@ -10,8 +10,8 @@ def config_gui():
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     side_length = screen_height if screen_height < screen_width else screen_width
-    Config.set('graphics', 'width', int(0.7 * side_length))
-    Config.set('graphics', 'height', int(0.7 * side_length))
+    Config.set('graphics', 'width', int(0.4 * side_length))
+    Config.set('graphics', 'height', int(0.4 * side_length))
     Config.write()
 
 

@@ -47,8 +47,8 @@ class Population:
         for i in range(1, self.pop_size):
             for j in range(len(self.population[0].indv.layers)):
                 self.population[i].indv.layers[j].weight_mtr = np.add(
-                    np.multiply(self.population[0].indv.layers[j].weight_mtr, 0.4),
-                    np.multiply(self.population[i].indv.layers[j].weight_mtr, 0.6))
+                    np.multiply(self.population[0].indv.layers[j].weight_mtr, 0.25),
+                    np.multiply(self.population[i].indv.layers[j].weight_mtr, 0.75))
 
     def make_crossover(self):
         for i in range(1, self.pop_size):
@@ -140,7 +140,7 @@ class Population:
 
 class Individual:
     def __init__(self, factory, indv=None):
-        self.fit = [0] * 4
+        self.fit = [0] * 6
         self.fit_size = len(self.fit)
         self.rank = 0
         self.add_counter = 0
