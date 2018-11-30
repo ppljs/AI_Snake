@@ -27,7 +27,7 @@ python src/main.py
   * MANUAL let you play the game! :smile:
 
 ## AI Learning  
-  [](nn.png)
+  <img src="nn.png" align="center" width="480">
 
 - 1° Start #population_size individuals of neural network with random weights.
 - 2° The population of neural networks are evaluated and ranked by their fitness.
