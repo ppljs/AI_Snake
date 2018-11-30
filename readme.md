@@ -8,7 +8,7 @@ An evolutionary algorithm that ajusts the weights of a neural network to control
   </a>
 </p>
 
-### Prerequisites
+## Prerequisites
 
 * Kivy  
   * See instalation instrutions https://kivy.org

@@ -1,0 +1,3 @@
+pynput
+python-utils
+numpy
