@@ -25,3 +25,15 @@ python src/main.py
   * USE_GUI enable the visual interface.
   * USE_SAVE makes the program use the file save.pkl as the Snake AI
   * MANUAL let you play the game! :smile:
+
+## AI Learning  
+  [](nn.png)
+
+- 1° Start #population_size individuals of neural network with random weights.
+- 2° The population of neural networks are evaluated and ranked by their fitness.
+- 3° Remove some percentage of the population worst individuals.
+- 4° Make the crossover
+- 5° Make the mutation
+- 6° Start a new generation
+
+
