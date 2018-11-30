@@ -27,13 +27,13 @@ python src/main.py
   * MANUAL let you play the game! :smile:
 
 ## AI Learning  
-  <img src="nn.png" align="center" width="480">
+  <img src="nn.png" align="center" width="520">
 
 - 1° Start #population_size individuals of neural network with random weights.
 - 2° The population of neural networks are evaluated and ranked by their fitness.
 - 3° Remove some percentage of the population worst individuals.
-- 4° Make the crossover
-- 5° Make the mutation
-- 6° Start a new generation
+- 4° Make the crossover.
+- 5° Make the mutation.
+- 6° Start a new generation.
 
 
