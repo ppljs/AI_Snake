@@ -47,6 +47,6 @@ python src/main.py
 
 * Observation: One of the evalution problems is the noise given by the location of the apples. Sometimes the apple can be in better place and this may give a higher fitness incorrectly. To reduce this noise and improve the fitness acurracy, it's important to evaluate the same network more than one time (play more games).
 
-* Team  
+## Team  
 Paulo Pinheiro Lemgruber Jeunon Sousa  
 Matheus Carvalho Nali
