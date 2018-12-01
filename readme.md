@@ -23,7 +23,7 @@ python src/main.py
 
 * In the file main.py at lines 123, 124 and 125 we have the variables USE_GUI, USE_SAVE and MANUAL. 
   * USE_GUI enable the visual interface.
-  * USE_SAVE makes the program use the file save.pkl as the Snake AI
+  * USE_SAVE makes the program use the file save.pkl as the Snake AI.
   * MANUAL let you play the game! :smile:
 
 ## AI Learning  
@@ -47,3 +47,6 @@ python src/main.py
 
 * Observation: One of the evalution problems is the noise given by the location of the apples. Sometimes the apple can be in better place and this may give a higher fitness incorrectly. To reduce this noise and improve the fitness acurracy, it's important to evaluate the same network more than one time (play more games).
 
+* Team  
+Paulo Pinheiro Lemgruber Jeunon Sousa  
+Matheus Carvalho Nali
