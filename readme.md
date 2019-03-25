@@ -4,7 +4,7 @@ An evolutionary algorithm that ajusts the weights of a neural network to control
 
 <p align="center">
   <a href="Snake AI">
-    <img src="https://github.com/PauloLemgruberJeunon/AI_Snake/blob/master/snake_ai.gif?raw=true" />
+    <img src="https://github.com/PauloLemgruberJeunon/AI_Snake/blob/master/snake.gif?raw=true" />
   </a>
 </p>
 
